@@ -4,11 +4,13 @@ class AppButton extends StatelessWidget {
   final String text;
   final Color color;
   final Color textColor;
+  final void Function()? onPressed;
   const AppButton({
     super.key,
     required this.text,
     required this.color,
     this.textColor = Colors.white,
+    this.onPressed,
   });
 
   @override
@@ -16,7 +18,7 @@ class AppButton extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         child: Container(
           padding: EdgeInsets.all(12),
           child: Text(
