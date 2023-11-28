@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_application_1/components/app_button.dart';
 import 'package:flutter_application_1/components/app_text_field.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,19 +13,26 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<Map<String, dynamic>> pengeluaran_list = [
-    {
-      "keterangan": "Contoh Keterangan 1",
-      "amount": 100000,
-    },
-    {
-      "keterangan": "Contoh Keterangan 2",
-      "amount": 100000,
-    },
-  ];
+  List<Map<String, dynamic>> pengeluaran_list = [];
 
   TextEditingController keteranganController = TextEditingController();
   TextEditingController amountController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetchData();
+  }
+
+  void fetchData() async {
+    dynamic response = await Supabase.instance.client
+        .from('expense')
+        .select<List<Map<String, dynamic>>>();
+    setState(() {
+      pengeluaran_list = response;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(pengeluaran['keterangan']),
+                              Text(pengeluaran['description']),
                               Text(pengeluaran['amount'].toString()),
                             ],
                           ),
