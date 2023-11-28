@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:flutter_application_1/components/app_button.dart';
 import 'package:flutter_application_1/components/app_text_field.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -29,6 +27,7 @@ class _HomePageState extends State<HomePage> {
     dynamic response = await Supabase.instance.client
         .from('expense')
         .select<List<Map<String, dynamic>>>();
+    print(response);
     setState(() {
       pengeluaran_list = response;
     });
@@ -71,13 +70,12 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               AppButton(
-                onPressed: () {
-                  setState(() {
-                    pengeluaran_list.add({
-                      "keterangan": keteranganController.text,
-                      "amount": int.parse(amountController.text)
-                    });
+                onPressed: () async {
+                  await Supabase.instance.client.from('expense').insert({
+                    'amount': int.parse(amountController.text),
+                    'description': keteranganController.text
                   });
+                  fetchData();
                 },
                 text: "Simpan",
                 color: Colors.black,
@@ -100,11 +98,27 @@ class _HomePageState extends State<HomePage> {
                       (pengeluaran) => Card(
                         child: Container(
                           padding: EdgeInsets.all(20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
                             children: [
-                              Text(pengeluaran['description']),
-                              Text(pengeluaran['amount'].toString()),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(pengeluaran['description']),
+                                  Text(pengeluaran['amount'].toString()),
+                                ],
+                              ),
+                              AppButton(
+                                text: "Delete",
+                                color: Colors.red,
+                                onPressed: () async {
+                                  await Supabase.instance.client
+                                      .from('expense')
+                                      .delete()
+                                      .match({"id": pengeluaran['id']});
+                                  fetchData();
+                                },
+                              )
                             ],
                           ),
                         ),
