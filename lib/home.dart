@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/components/app_button.dart';
 import 'package:flutter_application_1/components/app_text_field.dart';
+import 'package:flutter_application_1/edit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -117,6 +118,17 @@ class _HomePageState extends State<HomePage> {
                                       .delete()
                                       .match({"id": pengeluaran['id']});
                                   fetchData();
+                                },
+                              ),
+                              AppButton(
+                                text: "Edit",
+                                color: Colors.orange,
+                                onPressed: () async {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (ctx) => EditPage(),
+                                    ),
+                                  );
                                 },
                               )
                             ],
