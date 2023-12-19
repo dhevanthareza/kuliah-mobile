@@ -124,11 +124,20 @@ class _HomePageState extends State<HomePage> {
                                 text: "Edit",
                                 color: Colors.orange,
                                 onPressed: () async {
-                                  Navigator.of(context).push(
+                                  Navigator.of(context)
+                                      .push(
                                     MaterialPageRoute(
-                                      builder: (ctx) => EditPage(),
+                                      builder: (ctx) => EditPage(
+                                        id: pengeluaran['id'],
+                                        description: pengeluaran['description'],
+                                        amount:
+                                            pengeluaran['amount'].toString(),
+                                      ),
                                     ),
-                                  );
+                                  )
+                                      .then((value) {
+                                    fetchData();
+                                  });
                                 },
                               )
                             ],
